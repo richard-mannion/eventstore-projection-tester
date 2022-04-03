@@ -9,6 +9,7 @@ export class EventStoreEngineResult {
     public getTotalEvents = (): number => this.engine.getTotalEvents();
     public getStreamNames = (): Array<string> => this.engine.getStreamNames();
     public getEventsForStream = (streamName: string): Array<Event> => this.engine.getEventsForStream(streamName);
+    public getEvents = (): Array<Event> => this.engine.getEvents();
 }
 
 export const runEventstoreEngine = async (

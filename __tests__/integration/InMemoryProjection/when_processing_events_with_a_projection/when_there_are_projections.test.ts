@@ -20,9 +20,8 @@ describe('when processing events with a projection', () => {
 
                     streamsCollection.my_stream = { streamName: 'my_stream', events: [eventToProcess, eventToIgnore] };
 
-                    const projection = new InMemoryProjection(streamsCollection, emitFunc);
-                    projection.fromstream('my_stream').when(funct(emitFunc, engine));
-                    engine.addEvent('my_stream', 'MyEventType', { myField: 123 }, null);
+                    const projection = new InMemoryProjection(streamsCollection);
+                    projection.fromStream('my_stream').when(funct(emitFunc));
                 });
                 expect(emitFunc).toBeCalledTimes(1);
             });
@@ -43,9 +42,8 @@ describe('when processing events with a projection', () => {
 
                     streamsCollection.my_stream = { streamName: 'my_stream', events: [eventToProcess, eventToIgnore] };
 
-                    const projection = new InMemoryProjection(streamsCollection, emitFunc);
-                    projection.fromstream('my_stream').when(funct(emitFunc, engine));
-                    engine.addEvent('my_stream', 'MyEventType', { myField: 123 }, null);
+                    const projection = new InMemoryProjection(streamsCollection);
+                    projection.fromStream('my_stream').when(funct(emitFunc));
                 });
                 expect(emittedEventType).toBe('NextEventType');
             });
@@ -64,9 +62,8 @@ describe('when processing events with a projection', () => {
 
                     streamsCollection.my_stream = { streamName: 'my_stream', events: [eventToProcess, eventToIgnore] };
 
-                    const projection = new InMemoryProjection(streamsCollection, emitFunc);
-                    projection.fromstream('my_stream').when(funct(emitFunc, engine));
-                    engine.addEvent('my_stream', 'MyEventType', { myField: 123 }, null);
+                    const projection = new InMemoryProjection(streamsCollection);
+                    projection.fromStream('my_stream').when(funct(emitFunc));
                 });
                 expect(JSON.stringify(emittedData)).toBe(JSON.stringify(inputData));
             });
@@ -90,9 +87,8 @@ describe('when processing events with a projection', () => {
                             events: [eventToProcess, eventToIgnore],
                         };
 
-                        const projection = new InMemoryProjection(streamsCollection, emitFunc);
-                        projection.fromstream('my_stream').when(funct(emitFunc, engine));
-                        engine.addEvent('my_stream', 'MyEventType', { myField: 123 }, null);
+                        const projection = new InMemoryProjection(streamsCollection);
+                        projection.fromStream('my_stream').when(funct(emitFunc));
                     });
 
                     expect(emittedMetadata).toBeNull();
@@ -119,9 +115,8 @@ describe('when processing events with a projection', () => {
                             events: [eventToProcess, eventToIgnore],
                         };
 
-                        const projection = new InMemoryProjection(streamsCollection, emitFunc);
-                        projection.fromstream('my_stream').when(funct(emitFunc, engine));
-                        engine.addEvent('my_stream', 'MyEventType', { myField: 123 }, null);
+                        const projection = new InMemoryProjection(streamsCollection);
+                        projection.fromStream('my_stream').when(funct(emitFunc));
                     });
                     expect(JSON.stringify(emittedMetadata)).toBe(JSON.stringify(inputMetadata));
                 });
