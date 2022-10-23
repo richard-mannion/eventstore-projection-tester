@@ -1,4 +1,4 @@
-export const funct = (emit) => {
+export const funct = (emit, linkTo) => {
   return {
     $init: () => { },
     myEventType: (s, e) => {

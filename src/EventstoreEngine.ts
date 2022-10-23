@@ -33,13 +33,14 @@ export type Metadata = Record<string | number, unknown> | unknown[] | string | u
 export type streamCollection = { [key: string]: Stream };
 export type emitFunction = (streamId: string, eventType: string, data: any, metadata: Metadata) => void;
 export type linkToFunction = (streamId: string, event: Event, metadata: Metadata) => void;
+export type fromStreamFunction = (streamName: string) => StreamAction;
 export interface Event {
     data: any;
     eventType: string;
     metadata: Metadata;
 }
 
-export type projectionExecutor = (projection: Projection, emit: emitFunction, linkTo: linkToFunction) => void;
+export type projectionExecutor = (emit: emitFunction, linkTo: linkToFunction, fromStream: fromStreamFunction) => void;
 export type projectionContainer = { projection: Projection; execute: projectionExecutor };
 
 export class NoStreamAction implements StreamAction {
@@ -64,6 +65,9 @@ export class InMemoryStreamAction implements StreamAction {
         const event = this.stream.events[nextStreamPointer];
         this.streamPointer = nextStreamPointer;
 
+        if (streamMessageHandler['$all']) {
+            streamMessageHandler['$all'](this.state, event);
+        }
         if (streamMessageHandler[event.eventType]) {
             streamMessageHandler[event.eventType](this.state, event);
         }
@@ -134,14 +138,13 @@ export class InMemoryEventstoreEngine implements EventstoreEngine {
     public emit = (streamId: string, eventType: string, data: any, metadata: Metadata) => {
         const currentStream = this.streams[streamId];
         const event = { data, eventType: eventType, metadata };
-
         if (currentStream) {
             currentStream.events.push(event);
         } else {
             this.streams[streamId] = { events: [event], streamId: streamId };
         }
         this.projections.forEach((projectionContainer) => {
-            projectionContainer.execute(projectionContainer.projection, this.emit, this.linkTo);
+            projectionContainer.execute(this.emit, this.linkTo, projectionContainer.projection.fromStream);
         });
     };
     public linkTo = (streamId: string, event: Event, metadata: Metadata) => {
@@ -154,7 +157,7 @@ export class InMemoryEventstoreEngine implements EventstoreEngine {
             this.streams[streamId] = { events: [linkedEvent], streamId: streamId };
         }
         this.projections.forEach((projectionContainer) => {
-            projectionContainer.execute(projectionContainer.projection, this.emit, this.linkTo);
+            projectionContainer.execute(this.emit, this.linkTo, projectionContainer.projection.fromStream);
         });
     };
 }

@@ -1,7 +1,7 @@
 import { EventstoreEngine, InMemoryEventstoreEngine, Event } from './EventstoreEngine';
 import { getEnginePath } from './paths';
 import { v4 } from 'uuid';
-import { rmdirSync } from 'fs';
+import { rmdirSync, existsSync } from 'fs';
 
 export class EventStoreEngineResult {
     constructor(private engine: EventstoreEngine) {}
@@ -17,11 +17,14 @@ export const runEventstoreEngine = async (
 ): Promise<EventStoreEngineResult> => {
     const engineId = v4();
     const enginePath = getEnginePath(__dirname, engineId);
+
     try {
         const engine = new InMemoryEventstoreEngine(enginePath);
         await clientCode(engine);
         return new EventStoreEngineResult(engine);
     } finally {
-        rmdirSync(enginePath, { recursive: true });
+        if (existsSync(enginePath)) {
+            rmdirSync(enginePath, { recursive: true });
+        }
     }
 };

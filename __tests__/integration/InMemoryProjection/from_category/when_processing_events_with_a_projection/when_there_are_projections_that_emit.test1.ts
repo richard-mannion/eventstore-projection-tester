@@ -6,8 +6,8 @@ import {
     Event,
     emitFunction,
     linkToFunction,
-} from '../../../../src';
-import { runEventstoreEngine } from '../../../../src/runEventstoreEngine';
+} from '../../../../../src';
+import { runEventstoreEngine } from '../../../../../src/runEventstoreEngine';
 import { funct } from './basicEmitProjection.js';
 
 /*const myLoggerFunction = (streamName: string, eventType: string, data: any, metadata: Metadata): void => {

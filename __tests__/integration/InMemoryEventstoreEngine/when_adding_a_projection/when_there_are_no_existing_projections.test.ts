@@ -1,7 +1,5 @@
 import { InMemoryEventstoreEngine } from '../../../../src';
 import { runEventstoreEngine } from '../../../../src/runEventstoreEngine';
-import path from 'path';
-import { v4 } from 'uuid';
 describe('when adding a projection', () => {
     describe('when there are no projections', () => {
         describe('when there is one event', () => {
