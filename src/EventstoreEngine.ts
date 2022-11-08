@@ -123,7 +123,7 @@ export class InMemoryCategoryAction implements CategoryAction {
             if (pointer !== undefined) {
                 const event = streamCollection[key].events[pointer];
 
-                if (!oldestEvent || oldestEvent.created < event.created) {
+                if (!oldestEvent || oldestEvent.created > event.created) {
                     oldestEvent = event;
                     oldestEventStreamName = key;
                     oldestPointer = pointer;
