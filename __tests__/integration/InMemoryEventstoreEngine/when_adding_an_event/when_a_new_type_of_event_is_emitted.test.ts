@@ -12,6 +12,7 @@ describe('when adding a projectioj', () => {
                     data: { newField: 'a value', myField },
                     metadata: { metadataField: 3 },
                     eventType: newEventType,
+                    created: 2,
                 };
                 const engineResult = await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
                     await engine.addProjection(

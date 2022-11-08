@@ -1,7 +1,7 @@
 import {
     InMemoryEventstoreEngine,
     InMemoryProjection,
-    streamCollection,
+    StreamCollection,
     Metadata,
     Event,
     emitFunction,
@@ -19,9 +19,19 @@ describe('when processing events with a projection', () => {
                     const emitMockFunc: emitFunction = jest.fn().mockName('emit');
                     const linkToFunc: linkToFunction = jest.fn().mockName('linkTo');
                     await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                        const streamsCollection: streamCollection = {};
-                        const eventToProcess = { data: 'my event', eventType: 'myEventType', metadata: null };
-                        const eventToIgnore = { data: 'my event2', eventType: 'myOtherEventType', metadata: null };
+                        const streamsCollection: StreamCollection = {};
+                        const eventToProcess = {
+                            data: 'my event',
+                            eventType: 'myEventType',
+                            metadata: null,
+                            created: 1,
+                        };
+                        const eventToIgnore = {
+                            data: 'my event2',
+                            eventType: 'myOtherEventType',
+                            metadata: null,
+                            created: 2,
+                        };
 
                         streamsCollection.my_stream = {
                             streamId: 'my_stream',
@@ -30,6 +40,7 @@ describe('when processing events with a projection', () => {
 
                         const projection = new InMemoryProjection(streamsCollection);
                         projection.fromStream('my_stream').when(funct(emitMockFunc, linkToFunc));
+                        projection.fromStream('my_stream').when(funct(emitFunc, linkToFunc));
                     });
                     expect(emitMockFunc).toBeCalledTimes(0);
                     expect(linkToFunc).toBeCalledTimes(1);
@@ -41,14 +52,20 @@ describe('when processing events with a projection', () => {
                         data: { myEventDataField: 'my event' },
                         eventType: 'myEventType',
                         metadata: null,
+                        created: 1,
                     };
                     const linkToFunc: linkToFunction = (streamId: string, event: Event, metadata: Metadata) => {
                         passedInEvent = event;
                     };
                     await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                        const streamsCollection: streamCollection = {};
+                        const streamsCollection: StreamCollection = {};
 
-                        const eventToIgnore = { data: 'my event2', eventType: 'myOtherEventType', metadata: null };
+                        const eventToIgnore = {
+                            data: 'my event2',
+                            eventType: 'myOtherEventType',
+                            metadata: null,
+                            created: 2,
+                        };
 
                         streamsCollection.my_stream = {
                             streamId: 'my_stream',
@@ -56,6 +73,7 @@ describe('when processing events with a projection', () => {
                         };
 
                         const projection = new InMemoryProjection(streamsCollection);
+                        projection.fromStream('my_stream').when(funct(emitFunc, linkToFunc));
                         projection.fromStream('my_stream').when(funct(emitFunc, linkToFunc));
                     });
                     expect(passedInEvent).toBe(eventToProcess);
@@ -67,14 +85,20 @@ describe('when processing events with a projection', () => {
                         data: { myEventDataField: 'my event' },
                         eventType: 'myEventType',
                         metadata: null,
+                        created: 1,
                     };
                     const linkToFunc: linkToFunction = (streamId: string, event: Event, metadata: Metadata) => {
                         passedInMetadata = metadata;
                     };
                     await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                        const streamsCollection: streamCollection = {};
+                        const streamsCollection: StreamCollection = {};
 
-                        const eventToIgnore = { data: 'my event2', eventType: 'myOtherEventType', metadata: null };
+                        const eventToIgnore = {
+                            data: 'my event2',
+                            eventType: 'myOtherEventType',
+                            metadata: null,
+                            created: 2,
+                        };
 
                         streamsCollection.my_stream = {
                             streamId: 'my_stream',
@@ -82,6 +106,7 @@ describe('when processing events with a projection', () => {
                         };
 
                         const projection = new InMemoryProjection(streamsCollection);
+                        projection.fromStream('my_stream').when(funct(emitFunc, linkToFunc));
                         projection.fromStream('my_stream').when(funct(emitFunc, linkToFunc));
                     });
                     expect(JSON.stringify(passedInMetadata)).toBe(JSON.stringify({ newMetatDataField: 'bla' }));

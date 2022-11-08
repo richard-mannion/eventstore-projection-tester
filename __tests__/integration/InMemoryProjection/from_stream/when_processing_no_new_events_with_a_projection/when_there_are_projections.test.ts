@@ -1,7 +1,7 @@
 import {
     InMemoryEventstoreEngine,
     InMemoryProjection,
-    streamCollection,
+    StreamCollection,
     Metadata,
     Event,
     emitFunction,
@@ -17,7 +17,7 @@ describe('when processing events with a projection', () => {
                 const emitFunc: emitFunction = jest.fn().mockName('emit');
                 const linkToFunc: linkToFunction = jest.fn().mockName('linkTo');
                 await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                    const streamsCollection: streamCollection = {};
+                    const streamsCollection: StreamCollection = {};
                     const eventToProcess = { data: 'my event', eventType: 'myEventType', metadata: null };
                     const eventToIgnore = { data: 'my event2', eventType: 'myOtherEventType', metadata: null };
 
