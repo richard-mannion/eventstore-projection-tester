@@ -1,4 +1,5 @@
 import { Stream, StreamAction, StreamMessageHandler, StreamPointer } from './EventstoreEngine';
+import { getNextStreamPointer } from './getNextStreamPointer';
 
 export class InMemoryStreamAction implements StreamAction {
     private state: any;
@@ -8,13 +9,13 @@ export class InMemoryStreamAction implements StreamAction {
         if (!this.state && streamMessageHandler.$init) {
             this.state = streamMessageHandler.$init();
         }
-        if (this.stream.events.length == 0) {
+
+        const nextStreamPointer = getNextStreamPointer(this.stream, this.streamPointer);
+
+        if (nextStreamPointer === undefined) {
             return;
         }
-        if (this.streamPointer === this.stream.events.length - 1) {
-            return;
-        }
-        const nextStreamPointer = this.streamPointer === 'START' ? 0 : this.streamPointer + 1;
+
         const event = this.stream.events[nextStreamPointer];
         this.streamPointer = nextStreamPointer;
 

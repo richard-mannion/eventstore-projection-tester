@@ -7,26 +7,13 @@ import {
     StreamPointerCollection,
     Event,
 } from './EventstoreEngine';
+import { getNextStreamPointer } from './getNextStreamPointer';
 
 export class InMemoryCategoryAction implements CategoryAction {
     private state: any;
     public streamPointers: StreamPointerCollection;
     public constructor(private getStreams: () => StreamCollection) {
         this.streamPointers = {};
-    }
-
-    getNextStreamPointer(stream: Stream, streamPointer: StreamPointer): number | undefined {
-        if (stream.events.length === 0) {
-            return;
-        }
-        if (streamPointer === undefined) {
-            streamPointer = 'START';
-        }
-        if (streamPointer === stream.events.length - 1) {
-            return;
-        }
-
-        return streamPointer === 'START' ? 0 : streamPointer + 1;
     }
 
     private getNextEventStream(
@@ -37,7 +24,7 @@ export class InMemoryCategoryAction implements CategoryAction {
         let oldestEventStreamName: string | undefined;
         let oldestPointer: number | undefined;
         Object.keys(streamCollection).forEach((key) => {
-            const pointer = this.getNextStreamPointer(streamCollection[key], streamPointers[key]);
+            const pointer = getNextStreamPointer(streamCollection[key], streamPointers[key]);
 
             if (pointer !== undefined) {
                 const event = streamCollection[key].events[pointer];
@@ -64,7 +51,7 @@ export class InMemoryCategoryAction implements CategoryAction {
             return;
         }
         const { streamName, event, streamPointer } = nextEventResult;
-        //console.log('Result:', nextEventResult);
+
         this.streamPointers[streamName] = streamPointer;
 
         if (streamMessageHandler['$all']) {

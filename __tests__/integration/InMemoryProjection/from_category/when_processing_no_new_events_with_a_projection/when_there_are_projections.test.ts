@@ -13,11 +13,14 @@ describe('when processing events with a projection', () => {
                 const streamsCollection: StreamCollection = {};
                 const eventToProcess = { data: 'my event', eventType: 'myEventType', metadata: null, created: 1 };
 
-                streamsCollection.my_stream = { streamId: 'my_stream', events: [eventToProcess] };
+                streamsCollection['my_stream-123'] = {
+                    streamId: 'my_stream-123',
+                    events: [eventToProcess],
+                };
 
                 const projection = new InMemoryProjection(streamsCollection);
-                projection.fromStream('my_stream').when(funct(emitFunc, linkToFunc));
-                projection.fromStream('my_stream').when(funct(emitFunc, linkToFunc));
+                projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
+                projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
 
                 expect(emitFunc).toBeCalledTimes(1);
                 expect(linkToFunc).toBeCalledTimes(0);
