@@ -1,19 +1,18 @@
 import {
     InMemoryEventstoreEngine,
-    InMemoryProjection,
     StreamCollection,
     Metadata,
     Event,
     emitFunction,
     linkToFunction,
 } from '../../../../../src';
+import { InMemoryProjection } from '../../../../../src/InMemoryProjection';
 import { runEventstoreEngine } from '../../../../../src/runEventstoreEngine';
 import { funct } from './basicEmitProjection.js';
 
 /*const myLoggerFunction = (streamName: string, eventType: string, data: any, metadata: Metadata): void => {
     console.log('%^%^%^%^%^%^%^%%^%^');
 };*/
-const linkToFunc: linkToFunction = (streamId: string, event: Event, metadata: Metadata) => {};
 describe('when processing events with a projection', () => {
     describe('when there is one projections that emits events', () => {
         describe('when the projection uses fromCategory', () => {
@@ -21,104 +20,115 @@ describe('when processing events with a projection', () => {
                 describe('when only one of two events matches', () => {
                     it('should emit one event', async () => {
                         const emitFunction: emitFunction = jest.fn().mockName('emit');
-                        const linkToMockFunc: linkToFunction = jest.fn().mockName('linkTo');
-                        await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                            const streamsCollection: StreamCollection = {};
-                            const eventToProcess = {
-                                data: 'my event',
-                                eventType: 'myEventType',
-                                metadata: null,
-                                created: 1,
-                            };
-                            const eventToIgnore = {
-                                data: 'my event2',
-                                eventType: 'myOtherEventType',
-                                metadata: null,
-                                created: 2,
-                            };
+                        const linkToFunction: linkToFunction = jest.fn().mockName('linkTo');
 
-                            streamsCollection['my_stream-123'] = {
-                                streamId: 'my_stream-123',
-                                events: [eventToProcess, eventToIgnore],
-                            };
+                        const streamsCollection: StreamCollection = {};
+                        const eventToProcess = {
+                            data: 'my event',
+                            eventType: 'myEventType',
+                            metadata: null,
+                            created: 1,
+                        };
+                        const eventToIgnore = {
+                            data: 'my event2',
+                            eventType: 'myOtherEventType',
+                            metadata: null,
+                            created: 2,
+                        };
 
-                            const projection = new InMemoryProjection(streamsCollection);
-                            projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunc));
-                            projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunc));
-                        });
+                        streamsCollection['my_stream-123'] = {
+                            streamId: 'my_stream-123',
+                            events: [eventToProcess, eventToIgnore],
+                        };
+
+                        const projection = new InMemoryProjection(streamsCollection);
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+
                         expect(emitFunction).toBeCalledTimes(1);
-                        expect(linkToMockFunc).toBeCalledTimes(0);
+                        expect(linkToFunction).toBeCalledTimes(0);
                     });
 
                     it('the emitted event should be of the type specified in the emit action', async () => {
                         let emittedEventType = '';
-                        const emitFunc = (_streamName: string, eventType: string, _data: any, _metadata: Metadata) => {
+                        const emitFunction = (
+                            _streamName: string,
+                            eventType: string,
+                            _data: any,
+                            _metadata: Metadata,
+                        ) => {
                             emittedEventType = eventType;
                         };
+                        const linkToFunction: linkToFunction = jest.fn().mockName('linkTo');
 
-                        await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                            const streamsCollection: StreamCollection = {};
-                            const eventToProcess = {
-                                data: { myEventDataField: 'my event' },
-                                eventType: 'myEventType',
-                                metadata: null,
-                                created: 1,
-                            };
-                            const eventToIgnore = {
-                                data: 'my event2',
-                                eventType: 'myOtherEventType',
-                                metadata: null,
-                                created: 2,
-                            };
+                        const streamsCollection: StreamCollection = {};
+                        const eventToProcess = {
+                            data: { myEventDataField: 'my event' },
+                            eventType: 'myEventType',
+                            metadata: null,
+                            created: 1,
+                        };
+                        const eventToIgnore = {
+                            data: 'my event2',
+                            eventType: 'myOtherEventType',
+                            metadata: null,
+                            created: 2,
+                        };
 
-                            streamsCollection['my_stream-123'] = {
-                                streamId: 'my_stream-123',
-                                events: [eventToProcess, eventToIgnore],
-                            };
+                        streamsCollection['my_stream-123'] = {
+                            streamId: 'my_stream-123',
+                            events: [eventToProcess, eventToIgnore],
+                        };
 
-                            const projection = new InMemoryProjection(streamsCollection);
-                            projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                            projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                        });
+                        const projection = new InMemoryProjection(streamsCollection);
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+
                         expect(emittedEventType).toBe('NextEventType');
                     });
 
                     it('the emitted event should contain the specified data', async () => {
                         let emittedData = '';
                         const inputData = { myEventDataField: 'my event' };
-                        const emitFunc = (_streamName: string, _eventType: string, data: any, _metadata: Metadata) => {
+                        const emitFunction = (
+                            _streamName: string,
+                            _eventType: string,
+                            data: any,
+                            _metadata: Metadata,
+                        ) => {
                             emittedData = data;
                         };
-                        await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                            const streamsCollection: StreamCollection = {};
-                            const eventToProcess = {
-                                data: { myEventDataField: 'my event' },
-                                eventType: 'myEventType',
-                                metadata: null,
-                                created: 1,
-                            };
-                            const eventToIgnore = {
-                                data: 'my event2',
-                                eventType: 'myOtherEventType',
-                                metadata: null,
-                                created: 2,
-                            };
+                        const linkToFunction: linkToFunction = jest.fn().mockName('linkTo');
 
-                            streamsCollection['my_stream-123'] = {
-                                streamId: 'my_stream-123',
-                                events: [eventToProcess, eventToIgnore],
-                            };
+                        const streamsCollection: StreamCollection = {};
+                        const eventToProcess = {
+                            data: { myEventDataField: 'my event' },
+                            eventType: 'myEventType',
+                            metadata: null,
+                            created: 1,
+                        };
+                        const eventToIgnore = {
+                            data: 'my event2',
+                            eventType: 'myOtherEventType',
+                            metadata: null,
+                            created: 2,
+                        };
 
-                            const projection = new InMemoryProjection(streamsCollection);
-                            projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                            projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                        });
+                        streamsCollection['my_stream-123'] = {
+                            streamId: 'my_stream-123',
+                            events: [eventToProcess, eventToIgnore],
+                        };
+
+                        const projection = new InMemoryProjection(streamsCollection);
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+
                         expect(JSON.stringify(emittedData)).toBe(JSON.stringify(inputData));
                     });
                     describe('when There is no metatdata', () => {
                         it('the emitted metadata should be empty', async () => {
                             let emittedMetadata;
-                            const emitFunc = (
+                            const emitFunction = (
                                 _streamName: string,
                                 _eventType: string,
                                 _data: any,
@@ -126,31 +136,30 @@ describe('when processing events with a projection', () => {
                             ) => {
                                 emittedMetadata = metadata;
                             };
+                            const linkToFunction: linkToFunction = jest.fn().mockName('linkTo');
 
-                            await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                                const streamsCollection: StreamCollection = {};
-                                const eventToProcess = {
-                                    data: { myEventDataField: 'my event' },
-                                    eventType: 'myEventType',
-                                    metadata: null,
-                                    created: 1,
-                                };
-                                const eventToIgnore = {
-                                    data: 'my event2',
-                                    eventType: 'myOtherEventType',
-                                    metadata: null,
-                                    created: 2,
-                                };
+                            const streamsCollection: StreamCollection = {};
+                            const eventToProcess = {
+                                data: { myEventDataField: 'my event' },
+                                eventType: 'myEventType',
+                                metadata: null,
+                                created: 1,
+                            };
+                            const eventToIgnore = {
+                                data: 'my event2',
+                                eventType: 'myOtherEventType',
+                                metadata: null,
+                                created: 2,
+                            };
 
-                                streamsCollection['my_stream-123'] = {
-                                    streamId: 'my_stream-123',
-                                    events: [eventToProcess, eventToIgnore],
-                                };
+                            streamsCollection['my_stream-123'] = {
+                                streamId: 'my_stream-123',
+                                events: [eventToProcess, eventToIgnore],
+                            };
 
-                                const projection = new InMemoryProjection(streamsCollection);
-                                projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                                projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                            });
+                            const projection = new InMemoryProjection(streamsCollection);
+                            projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+                            projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
 
                             expect(emittedMetadata).toBeNull();
                         });
@@ -159,7 +168,7 @@ describe('when processing events with a projection', () => {
                         it('the emitted metadata should be set', async () => {
                             let emittedMetadata;
                             const inputMetadata = { myMetadataField: 'my metadata' };
-                            const emitFunc = (
+                            const emitFunction = (
                                 _streamName: string,
                                 _eventType: string,
                                 _data: any,
@@ -167,31 +176,31 @@ describe('when processing events with a projection', () => {
                             ) => {
                                 emittedMetadata = metadata;
                             };
+                            const linkToFunction: linkToFunction = jest.fn().mockName('linkTo');
 
-                            await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                                const streamsCollection: StreamCollection = {};
-                                const eventToProcess = {
-                                    data: { myEventDataField: 'my event' },
-                                    eventType: 'myEventType',
-                                    metadata: inputMetadata,
-                                    created: 1,
-                                };
-                                const eventToIgnore = {
-                                    data: 'my event2',
-                                    eventType: 'myOtherEventType',
-                                    metadata: null,
-                                    created: 2,
-                                };
+                            const streamsCollection: StreamCollection = {};
+                            const eventToProcess = {
+                                data: { myEventDataField: 'my event' },
+                                eventType: 'myEventType',
+                                metadata: inputMetadata,
+                                created: 1,
+                            };
+                            const eventToIgnore = {
+                                data: 'my event2',
+                                eventType: 'myOtherEventType',
+                                metadata: null,
+                                created: 2,
+                            };
 
-                                streamsCollection['my_stream-123'] = {
-                                    streamId: 'my_stream-123',
-                                    events: [eventToProcess, eventToIgnore],
-                                };
+                            streamsCollection['my_stream-123'] = {
+                                streamId: 'my_stream-123',
+                                events: [eventToProcess, eventToIgnore],
+                            };
 
-                                const projection = new InMemoryProjection(streamsCollection);
-                                projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                                projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                            });
+                            const projection = new InMemoryProjection(streamsCollection);
+                            projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+                            projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+
                             expect(JSON.stringify(emittedMetadata)).toBe(JSON.stringify(inputMetadata));
                         });
                     });
@@ -201,83 +210,88 @@ describe('when processing events with a projection', () => {
                 describe('when there matching events in both stream', () => {
                     it('should emit one event', async () => {
                         const emitFunction: emitFunction = jest.fn().mockName('emit');
-                        const linkToMockFunc: linkToFunction = jest.fn().mockName('linkTo');
-                        await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                            const streamsCollection: StreamCollection = {};
-                            const eventOne = {
-                                data: 'my event',
-                                eventType: 'myEventType',
-                                metadata: null,
-                                created: 1,
-                            };
-                            const eventTwo = {
-                                data: 'my event2',
-                                eventType: 'myEventType',
-                                metadata: null,
-                                created: 2,
-                            };
+                        const linkToFunction: linkToFunction = jest.fn().mockName('linkTo');
 
-                            streamsCollection['my_stream-123'] = {
-                                streamId: 'my_stream-123',
-                                events: [eventOne],
-                            };
+                        const streamsCollection: StreamCollection = {};
+                        const eventOne = {
+                            data: 'my event',
+                            eventType: 'myEventType',
+                            metadata: null,
+                            created: 1,
+                        };
+                        const eventTwo = {
+                            data: 'my event2',
+                            eventType: 'myEventType',
+                            metadata: null,
+                            created: 2,
+                        };
 
-                            streamsCollection['my_stream-234'] = {
-                                streamId: 'my_stream-234',
-                                events: [eventTwo],
-                            };
+                        streamsCollection['my_stream-123'] = {
+                            streamId: 'my_stream-123',
+                            events: [eventOne],
+                        };
 
-                            const projection = new InMemoryProjection(streamsCollection);
-                            projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunc));
-                            projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunc));
-                        });
+                        streamsCollection['my_stream-234'] = {
+                            streamId: 'my_stream-234',
+                            events: [eventTwo],
+                        };
+
+                        const projection = new InMemoryProjection(streamsCollection);
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+
                         expect(emitFunction).toBeCalledTimes(2);
-                        expect(linkToMockFunc).toBeCalledTimes(0);
+                        expect(linkToFunction).toBeCalledTimes(0);
                     });
 
                     it('should emit events in chronological order', async () => {
                         let emitOrder = '';
-                        const emitFunc = (_streamName: string, _eventType: string, _data: any, metadata: Metadata) => {
+                        const emitFunction = (
+                            _streamName: string,
+                            _eventType: string,
+                            _data: any,
+                            metadata: Metadata,
+                        ) => {
                             const convertedMetadata = metadata as Record<string | number, unknown>;
                             emitOrder += convertedMetadata['expected'];
                         };
-                        const linkToMockFunc: linkToFunction = jest.fn().mockName('linkTo');
-                        await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                            const streamsCollection: StreamCollection = {};
-                            const eventOne = {
-                                data: 'my event',
-                                eventType: 'myEventType',
-                                metadata: { expected: '1' },
-                                created: 1,
-                            };
-                            const eventTwo = {
-                                data: 'my event2',
-                                eventType: 'myEventType',
-                                metadata: { expected: '2' },
-                                created: 2,
-                            };
-                            const eventThree = {
-                                data: 'my event3',
-                                eventType: 'myEventType',
-                                metadata: { expected: '3' },
-                                created: 3,
-                            };
+                        const linkToFunction: linkToFunction = jest.fn().mockName('linkTo');
 
-                            streamsCollection['my_stream-123'] = {
-                                streamId: 'my_stream-123',
-                                events: [eventTwo],
-                            };
+                        const streamsCollection: StreamCollection = {};
+                        const eventOne = {
+                            data: 'my event',
+                            eventType: 'myEventType',
+                            metadata: { expected: '1' },
+                            created: 1,
+                        };
+                        const eventTwo = {
+                            data: 'my event2',
+                            eventType: 'myEventType',
+                            metadata: { expected: '2' },
+                            created: 2,
+                        };
+                        const eventThree = {
+                            data: 'my event3',
+                            eventType: 'myEventType',
+                            metadata: { expected: '3' },
+                            created: 3,
+                        };
 
-                            streamsCollection['my_stream-234'] = {
-                                streamId: 'my_stream-234',
-                                events: [eventOne, eventThree],
-                            };
+                        streamsCollection['my_stream-123'] = {
+                            streamId: 'my_stream-123',
+                            events: [eventTwo],
+                        };
 
-                            const projection = new InMemoryProjection(streamsCollection);
-                            projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                            projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                            projection.fromCategory('my_stream').when(funct(emitFunc, linkToFunc));
-                        });
+                        streamsCollection['my_stream-234'] = {
+                            streamId: 'my_stream-234',
+                            events: [eventOne, eventThree],
+                        };
+
+                        const projection = new InMemoryProjection(streamsCollection);
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+                        projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
+
                         expect(emitOrder).toBe('123');
                     });
                 });

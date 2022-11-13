@@ -1,12 +1,12 @@
 import {
     InMemoryEventstoreEngine,
-    InMemoryProjection,
     StreamCollection,
     Metadata,
     Event,
     emitFunction,
     linkToFunction,
 } from '../../../../../src';
+import { InMemoryProjection } from '../../../../../src/InMemoryProjection';
 import { runEventstoreEngine } from '../../../../../src/runEventstoreEngine';
 import { funct } from './basicEmitProjection.js';
 
@@ -21,30 +21,29 @@ describe('when processing events with a projection', () => {
                 it('should emit one event', async () => {
                     const emitFunction: emitFunction = jest.fn().mockName('emit');
                     const linkToMockFunc: linkToFunction = jest.fn().mockName('linkTo');
-                    await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
-                        const streamsCollection: StreamCollection = {};
-                        const eventToProcess = {
-                            data: 'my event',
-                            eventType: 'myEventType',
-                            metadata: null,
-                            created: 1,
-                        };
-                        const eventToIgnore = {
-                            data: 'my event2',
-                            eventType: 'myOtherEventType',
-                            metadata: null,
-                            created: 2,
-                        };
+                    const streamsCollection: StreamCollection = {};
+                    const eventToProcess = {
+                        data: 'my event',
+                        eventType: 'myEventType',
+                        metadata: null,
+                        created: 1,
+                    };
+                    const eventToIgnore = {
+                        data: 'my event2',
+                        eventType: 'myOtherEventType',
+                        metadata: null,
+                        created: 2,
+                    };
 
-                        streamsCollection.my_non_matching_stream = {
-                            streamId: 'my_non_matching_stream',
-                            events: [eventToProcess, eventToIgnore],
-                        };
+                    streamsCollection.my_non_matching_stream = {
+                        streamId: 'my_non_matching_stream',
+                        events: [eventToProcess, eventToIgnore],
+                    };
 
-                        const projection = new InMemoryProjection(streamsCollection);
-                        projection.fromStream('my_stream').when(funct(emitFunction, linkToFunc));
-                        projection.fromStream('my_stream').when(funct(emitFunction, linkToFunc));
-                    });
+                    const projection = new InMemoryProjection(streamsCollection);
+                    projection.fromStream('my_stream').when(funct(emitFunction, linkToFunc));
+                    projection.fromStream('my_stream').when(funct(emitFunction, linkToFunc));
+
                     expect(emitFunction).toBeCalledTimes(0);
                     expect(linkToMockFunc).toBeCalledTimes(0);
                 });

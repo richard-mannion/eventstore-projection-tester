@@ -1,8 +1,8 @@
 export const funct = (emit, linkTo) => {
   return {
-    $init: () => { },
+    $init: () => { return { eventsProcessed: 0 } },
     myEventType: (s, e) => {
-      linkTo('next_stream', e, { created: e.created });
+      s.eventsProcessed += 1;
     }
   }
 };

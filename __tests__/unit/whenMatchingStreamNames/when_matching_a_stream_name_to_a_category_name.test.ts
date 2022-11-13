@@ -1,4 +1,4 @@
-import { getStreamNamesFromCategoryName } from '../../../src/EventstoreEngine';
+import { getStreamNamesFromCategoryName } from '../../../src/getStreamNamesFromCategoryName';
 
 describe('when matching a stream name to a category name', () => {
     describe('when no stream names match', () => {
