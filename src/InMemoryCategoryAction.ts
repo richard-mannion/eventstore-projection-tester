@@ -1,11 +1,8 @@
 import {
     CategoryAction,
-    Stream,
     StreamCollection,
     StreamMessageHandler,
-    StreamPointer,
     StreamPointerCollection,
-    Event,
     ForeachStreamCategoryAction,
 } from './EventstoreEngine';
 import { getNextEventStream } from './getNextEventStream';
@@ -24,6 +21,7 @@ export class InMemoryCategoryAction implements CategoryAction {
         if (!this.state && streamMessageHandler.$init) {
             this.state = streamMessageHandler.$init();
         }
+
         const nextEventResult = getNextEventStream(this.getStreams(), this.streamPointers);
         if (!nextEventResult) {
             return;
@@ -31,9 +29,9 @@ export class InMemoryCategoryAction implements CategoryAction {
         const { streamName, event, streamPointer } = nextEventResult;
 
         this.streamPointers[streamName] = streamPointer;
-
-        if (streamMessageHandler['$all']) {
-            streamMessageHandler['$all'](this.state, event);
+        //console.log(streamMessageHandler);
+        if (streamMessageHandler['$any']) {
+            streamMessageHandler['$any'](this.state, event);
         }
         if (streamMessageHandler[event.eventType]) {
             streamMessageHandler[event.eventType](this.state, event);

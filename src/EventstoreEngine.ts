@@ -58,7 +58,12 @@ export interface Event {
     created: number;
 }
 
-export type projectionExecutor = (emit: emitFunction, linkTo: linkToFunction, fromStream: fromStreamFunction) => void;
+export type projectionExecutor = (
+    emit: emitFunction,
+    linkTo: linkToFunction,
+    fromStream: fromStreamFunction,
+    fromCategory: fromCategoryFunction,
+) => void;
 export type projectionContainer = { projection: Projection; execute: projectionExecutor };
 
 export class NoStreamAction implements StreamAction {
@@ -123,7 +128,12 @@ export class InMemoryEventstoreEngine implements EventstoreEngine {
             this.streams[streamId] = { events: [event], streamId: streamId };
         }
         this.projections.forEach((projectionContainer) => {
-            projectionContainer.execute(this.emit, this.linkTo, projectionContainer.projection.fromStream);
+            projectionContainer.execute(
+                this.emit,
+                this.linkTo,
+                projectionContainer.projection.fromStream,
+                projectionContainer.projection.fromCategory,
+            );
         });
     };
     public linkTo = (streamId: string, event: Event, metadata: Metadata) => {
@@ -137,7 +147,12 @@ export class InMemoryEventstoreEngine implements EventstoreEngine {
             this.streams[streamId] = { events: [linkedEvent], streamId: streamId };
         }
         this.projections.forEach((projectionContainer) => {
-            projectionContainer.execute(this.emit, this.linkTo, projectionContainer.projection.fromStream);
+            projectionContainer.execute(
+                this.emit,
+                this.linkTo,
+                projectionContainer.projection.fromStream,
+                projectionContainer.projection.fromCategory,
+            );
         });
     };
 }

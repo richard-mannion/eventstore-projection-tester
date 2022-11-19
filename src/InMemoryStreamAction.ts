@@ -19,8 +19,8 @@ export class InMemoryStreamAction implements StreamAction {
         const event = this.stream.events[nextStreamPointer];
         this.streamPointer = nextStreamPointer;
 
-        if (streamMessageHandler['$all']) {
-            streamMessageHandler['$all'](this.state, event);
+        if (streamMessageHandler['$any']) {
+            streamMessageHandler['$any'](this.state, event);
         }
         if (streamMessageHandler[event.eventType]) {
             streamMessageHandler[event.eventType](this.state, event);

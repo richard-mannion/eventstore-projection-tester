@@ -28,8 +28,8 @@ export class InMemoryForeachCategoryAction implements ForeachStreamCategoryActio
         }
         this.streamPointers[streamName] = streamPointer;
 
-        if (streamMessageHandler['$all']) {
-            streamMessageHandler['$all'](this.state[streamName], event);
+        if (streamMessageHandler['$any']) {
+            streamMessageHandler['$any'](this.state[streamName], event);
         }
         if (streamMessageHandler[event.eventType]) {
             streamMessageHandler[event.eventType](this.state[streamName], event);
