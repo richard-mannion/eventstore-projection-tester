@@ -3,8 +3,16 @@ import { getEnginePath } from './paths';
 import { v4 } from 'uuid';
 import { existsSync, rmSync } from 'fs';
 
-export class EventStoreEngineResult {
-    constructor(private engine: EventstoreEngine) {}
+export interface EventStoreEngineResult {
+    getTotalProjections: () => number;
+    getTotalEvents: () => number;
+    getStreamNames: () => Array<string>;
+    getEventsForStream: (streamName: string) => Array<Event>;
+    getEvents: () => Array<Event>;
+}
+
+export class InMemoryEventStoreEngineResult {
+    constructor(private engine: InMemoryEventstoreEngine) {}
     public getTotalProjections = (): number => this.engine.getTotalProjections();
     public getTotalEvents = (): number => this.engine.getTotalEvents();
     public getStreamNames = (): Array<string> => this.engine.getStreamNames();
@@ -21,7 +29,7 @@ export const runEventstoreEngine = async (
     try {
         const engine = new InMemoryEventstoreEngine(enginePath);
         await clientCode(engine);
-        return new EventStoreEngineResult(engine);
+        return new InMemoryEventStoreEngineResult(engine);
     } finally {
         if (existsSync(enginePath)) {
             rmSync(enginePath, { recursive: true });
