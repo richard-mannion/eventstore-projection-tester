@@ -1,4 +1,4 @@
-import { InMemoryEventstoreEngine } from '../../../../src';
+import { EventstoreEngine, InMemoryEventstoreEngine } from '../../../../src';
 import { runEventstoreEngine } from '../../../../src/runEventstoreEngine';
 
 describe('when adding a projectioj', () => {
@@ -14,7 +14,7 @@ describe('when adding a projectioj', () => {
                     eventType: newEventType,
                     created: 2,
                 };
-                const engineResult = await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
+                const engineResult = await runEventstoreEngine(async (engine: EventstoreEngine) => {
                     await engine.addProjection(
                         'myProjection',
                         `fromStream('my_stream').when({

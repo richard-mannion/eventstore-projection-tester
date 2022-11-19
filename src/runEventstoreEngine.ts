@@ -13,7 +13,7 @@ export class EventStoreEngineResult {
 }
 
 export const runEventstoreEngine = async (
-    clientCode: (eventstoreEngine: InMemoryEventstoreEngine) => Promise<void>,
+    clientCode: (eventstoreEngine: EventstoreEngine) => Promise<void>,
 ): Promise<EventStoreEngineResult> => {
     const engineId = v4();
     const enginePath = getEnginePath(__dirname, engineId);

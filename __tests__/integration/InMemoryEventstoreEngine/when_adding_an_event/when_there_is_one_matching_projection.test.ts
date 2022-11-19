@@ -1,10 +1,10 @@
-import { InMemoryEventstoreEngine } from '../../../../src';
+import { EventstoreEngine, InMemoryEventstoreEngine } from '../../../../src';
 import { runEventstoreEngine } from '../../../../src/runEventstoreEngine';
 describe('when adding a projection', () => {
     describe('when there is one matching projection with emit', () => {
         describe('when adding one event', () => {
             it('should add the event and emit a new one', async () => {
-                const engineResult = await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
+                const engineResult = await runEventstoreEngine(async (engine: EventstoreEngine) => {
                     await engine.addProjection(
                         'myProjection',
                         `fromStream('my_stream').when({
@@ -21,7 +21,7 @@ describe('when adding a projection', () => {
         });
         describe('when adding two events', () => {
             it('should add the events and emit a 2 new ones', async () => {
-                const engineResult = await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
+                const engineResult = await runEventstoreEngine(async (engine: EventstoreEngine) => {
                     await engine.addProjection(
                         'myProjection',
                         `fromStream('my_stream').when({
@@ -42,7 +42,7 @@ describe('when adding a projection', () => {
     describe('when there is one matching projection with linkTo', () => {
         describe('when adding one event', () => {
             it('should add the event and emit a new one', async () => {
-                const engineResult = await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
+                const engineResult = await runEventstoreEngine(async (engine: EventstoreEngine) => {
                     await engine.addProjection(
                         'myProjection',
                         `fromStream('my_stream').when({
@@ -59,7 +59,7 @@ describe('when adding a projection', () => {
         });
         describe('when adding two events', () => {
             it('should add the events and emit a 2 new ones', async () => {
-                const engineResult = await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
+                const engineResult = await runEventstoreEngine(async (engine: EventstoreEngine) => {
                     await engine.addProjection(
                         'myProjection',
                         `fromStream('my_stream').when({

@@ -25,12 +25,13 @@ export interface ForeachStreamCategoryAction {
 
 export interface EventstoreEngine {
     addProjection(projectionName: string, projection: string): Promise<void>;
-    getTotalProjections(): number;
-    getTotalEvents(): number;
-    getStreamNames(): Array<string>;
-    getEventsForStream(streamName: string): Array<Event>;
-    getEvents(): Array<Event>;
-    CleanTempFiles(): void;
+    addEvent(streamId: string, eventType: string, data: any, metadata: Metadata): void;
+    //getTotalProjections(): number;
+    //getTotalEvents(): number;
+    //getStreamNames(): Array<string>;
+    //getEventsForStream(streamName: string): Array<Event>;
+    //getEvents(): Array<Event>;
+    //CleanTempFiles(): void;
 }
 
 export interface Projection {
