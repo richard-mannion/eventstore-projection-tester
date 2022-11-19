@@ -31,6 +31,6 @@ export class InMemoryProjection implements Projection {
         if (!this.streamAction) {
             this.streamAction = new InMemoryCategoryAction(getStreamNames);
         }
-        return this.streamAction;
+        return this.streamAction as CategoryAction;
     };
 }

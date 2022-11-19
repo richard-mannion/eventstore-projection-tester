@@ -16,6 +16,11 @@ export interface StreamAction {
 
 export interface CategoryAction {
     when(categoryMessageHandler: StreamMessageHandler): void;
+    foreachStream(): ForeachStreamCategoryAction;
+}
+
+export interface ForeachStreamCategoryAction {
+    when(categoryMessageHandler: StreamMessageHandler): void;
 }
 
 export interface EventstoreEngine {

@@ -1,46 +1,38 @@
 import {
-    CategoryAction,
+    ForeachStreamCategoryAction,
     Stream,
     StreamCollection,
     StreamMessageHandler,
     StreamPointer,
     StreamPointerCollection,
     Event,
-    ForeachStreamCategoryAction,
 } from './EventstoreEngine';
 import { getNextEventStream } from './getNextEventStream';
-import { InMemoryForeachCategoryAction } from './InMemoryForeachStreamCategoryAction';
 
-export class InMemoryCategoryAction implements CategoryAction {
-    private state: any;
+export class InMemoryForeachCategoryAction implements ForeachStreamCategoryAction {
+    public state: { [key: string]: any };
     public streamPointers: StreamPointerCollection;
-    private foreachStreamCategoryAction: ForeachStreamCategoryAction;
     public constructor(private getStreams: () => StreamCollection) {
         this.streamPointers = {};
-        this.foreachStreamCategoryAction = new InMemoryForeachCategoryAction(getStreams);
+        this.state = {};
     }
 
     public when(streamMessageHandler: StreamMessageHandler) {
-        if (!this.state && streamMessageHandler.$init) {
-            this.state = streamMessageHandler.$init();
-        }
         const nextEventResult = getNextEventStream(this.getStreams(), this.streamPointers);
         if (!nextEventResult) {
             return;
         }
         const { streamName, event, streamPointer } = nextEventResult;
-
+        if (!this.state[streamName] && streamMessageHandler.$init) {
+            this.state[streamName] = streamMessageHandler.$init();
+        }
         this.streamPointers[streamName] = streamPointer;
 
         if (streamMessageHandler['$all']) {
-            streamMessageHandler['$all'](this.state, event);
+            streamMessageHandler['$all'](this.state[streamName], event);
         }
         if (streamMessageHandler[event.eventType]) {
-            streamMessageHandler[event.eventType](this.state, event);
+            streamMessageHandler[event.eventType](this.state[streamName], event);
         }
-    }
-
-    public foreachStream(): ForeachStreamCategoryAction {
-        return this.foreachStreamCategoryAction;
     }
 }
