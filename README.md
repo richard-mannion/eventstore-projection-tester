@@ -89,4 +89,4 @@ expect(engineResult.getEventsForStream(newEventStreamName)).toEqual([expectedEve
 
 ## Timing
 
-All events in Eventstore have a field called `created`. This field is used to process events in the correct order. To make this library simpler, the created is treated as a number that increments with eacj event added or emitted vie `emit` or `linkTo`. This way you can calculate the expected value per event.
+All events in Eventstore have a field called `created`. This field is used to process events in the correct order. To make this library simpler, the created is treated as a number that increments with each event added or emitted vie `emit` or `linkTo`. This way you can calculate the expected value per event.
