@@ -1,2 +1,3 @@
 .eventstore
 node_modules
+dist

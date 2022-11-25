@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
-    "types": "dist",
+    "types": "dist/index.d.ts",
     "dependencies": {
         "uuid": "^8.3.2"
     },
@@ -26,6 +26,10 @@
         "build": "npx tsc",
         "test": "jest --coverage=false"
     },
-    "author": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/richard-mannion/eventstore-projection-tester.git"
+    },
+    "author": "Richard Mannion",
     "license": "ISC"
 }
