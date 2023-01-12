@@ -139,8 +139,8 @@ export class InMemoryEventstoreEngine implements EventstoreEngine {
     };
     public linkTo = (streamId: string, event: Event, metadata: Metadata) => {
         const currentStream = this.streams[streamId];
-        const eventId = this.fakeDateTime.getNextTime();
-        const linkedEvent = { data: event.data, eventType: event.eventType, metadata, EventId: eventId };
+
+        const linkedEvent = { data: event.data, eventType: event.eventType, metadata, EventId: event.EventId };
 
         if (currentStream) {
             currentStream.events.push(linkedEvent);
