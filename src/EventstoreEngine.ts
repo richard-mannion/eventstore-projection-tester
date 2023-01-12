@@ -56,7 +56,7 @@ export interface Event {
     data: any;
     eventType: string;
     metadata: Metadata;
-    created: number;
+    EventId: number;
 }
 
 export type projectionExecutor = (
@@ -121,8 +121,8 @@ export class InMemoryEventstoreEngine implements EventstoreEngine {
 
     public emit = (streamId: string, eventType: string, data: any, metadata: Metadata) => {
         const currentStream = this.streams[streamId];
-        const created = this.fakeDateTime.getNextTime();
-        const event = { data, eventType: eventType, metadata, created };
+        const eventId = this.fakeDateTime.getNextTime();
+        const event = { data, eventType: eventType, metadata, EventId: eventId };
         if (currentStream) {
             currentStream.events.push(event);
         } else {
@@ -139,8 +139,8 @@ export class InMemoryEventstoreEngine implements EventstoreEngine {
     };
     public linkTo = (streamId: string, event: Event, metadata: Metadata) => {
         const currentStream = this.streams[streamId];
-        const created = this.fakeDateTime.getNextTime();
-        const linkedEvent = { data: event.data, eventType: event.eventType, metadata, created };
+        const eventId = this.fakeDateTime.getNextTime();
+        const linkedEvent = { data: event.data, eventType: event.eventType, metadata, EventId: eventId };
 
         if (currentStream) {
             currentStream.events.push(linkedEvent);

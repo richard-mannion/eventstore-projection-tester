@@ -27,13 +27,13 @@ describe('when processing events with a projection', () => {
                             data: 'my event',
                             eventType: 'myEventType',
                             metadata: null,
-                            created: 1,
+                            EventId: 1,
                         };
                         const eventToIgnore = {
                             data: 'my event2',
                             eventType: 'myOtherEventType',
                             metadata: null,
-                            created: 2,
+                            EventId: 2,
                         };
 
                         streamsCollection['my_stream-123'] = {
@@ -50,12 +50,12 @@ describe('when processing events with a projection', () => {
                     });
 
                     it('the source event should be passed into the linkTo function', async () => {
-                        let passedInEvent: Event = { data: '', eventType: '', metadata: { created: 1 }, created: 1 };
+                        let passedInEvent: Event = { data: '', eventType: '', metadata: { EventId: 1 }, EventId: 1 };
                         const eventToProcess = {
                             data: { myEventDataField: 'my event' },
                             eventType: 'myEventType',
                             metadata: null,
-                            created: 1,
+                            EventId: 1,
                         };
                         const emitFunction: emitFunction = jest.fn().mockName('emit');
                         const linkToFunction: linkToFunction = (streamId: string, event: Event, metadata: Metadata) => {
@@ -68,7 +68,7 @@ describe('when processing events with a projection', () => {
                             data: 'my event2',
                             eventType: 'myOtherEventType',
                             metadata: null,
-                            created: 2,
+                            EventId: 2,
                         };
 
                         streamsCollection['my_stream-123'] = {
@@ -85,12 +85,12 @@ describe('when processing events with a projection', () => {
 
                     it('the source event should be passed into the linkTo function', async () => {
                         const emitFunction: emitFunction = jest.fn().mockName('emit');
-                        let passedInEvent: Event = { data: '', eventType: '', metadata: {}, created: 0 };
+                        let passedInEvent: Event = { data: '', eventType: '', metadata: {}, EventId: 0 };
                         const eventToProcess = {
                             data: { myEventDataField: 'my event' },
                             eventType: 'myEventType',
                             metadata: null,
-                            created: 1,
+                            EventId: 1,
                         };
                         const linkToFunction: linkToFunction = (streamId: string, event: Event, metadata: Metadata) => {
                             passedInEvent = event;
@@ -102,7 +102,7 @@ describe('when processing events with a projection', () => {
                             data: 'my event2',
                             eventType: 'myOtherEventType',
                             metadata: null,
-                            created: 2,
+                            EventId: 2,
                         };
 
                         streamsCollection['my_stream-123'] = {
@@ -122,7 +122,7 @@ describe('when processing events with a projection', () => {
                             data: { myEventDataField: 'my event' },
                             eventType: 'myEventType',
                             metadata: null,
-                            created: 1,
+                            EventId: 1,
                         };
                         const emitFunction: emitFunction = jest.fn().mockName('emit');
                         const linkToFunction: linkToFunction = (streamId: string, event: Event, metadata: Metadata) => {
@@ -135,7 +135,7 @@ describe('when processing events with a projection', () => {
                             data: 'my event2',
                             eventType: 'myOtherEventType',
                             metadata: null,
-                            created: 2,
+                            EventId: 2,
                         };
 
                         streamsCollection['my_stream-123'] = {
@@ -147,7 +147,7 @@ describe('when processing events with a projection', () => {
                         projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
                         projection.fromCategory('my_stream').when(funct(emitFunction, linkToFunction));
 
-                        expect(JSON.stringify(passedInMetadata)).toBe(JSON.stringify({ created: 1 }));
+                        expect(JSON.stringify(passedInMetadata)).toBe(JSON.stringify({ EventId: 1 }));
                     });
                 });
             });

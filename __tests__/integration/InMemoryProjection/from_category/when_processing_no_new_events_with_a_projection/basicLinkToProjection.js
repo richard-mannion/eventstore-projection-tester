@@ -3,7 +3,7 @@ export const funct = (emit, linkTo) => {
     $init: () => { },
     myEventType: (s, e) => {
       console.log('##about to linkTo', linkTo)
-      linkTo('next_stream', e, { created: e.created });
+      linkTo('next_stream', e, { EventId: e.EventId });
     }
   }
 };

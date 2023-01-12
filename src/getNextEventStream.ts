@@ -14,7 +14,7 @@ export const getNextEventStream = (
         if (pointer !== undefined) {
             const event = streamCollection[key].events[pointer];
 
-            if (!oldestEvent || oldestEvent.created > event.created) {
+            if (!oldestEvent || oldestEvent.EventId > event.EventId) {
                 oldestEvent = event;
                 oldestEventStreamName = key;
                 oldestPointer = pointer;

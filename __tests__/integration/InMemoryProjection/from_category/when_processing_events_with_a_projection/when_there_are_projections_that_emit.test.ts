@@ -27,13 +27,13 @@ describe('when processing events with a projection', () => {
                             data: 'my event',
                             eventType: 'myEventType',
                             metadata: null,
-                            created: 1,
+                            EventId: 1,
                         };
                         const eventToIgnore = {
                             data: 'my event2',
                             eventType: 'myOtherEventType',
                             metadata: null,
-                            created: 2,
+                            EventId: 2,
                         };
 
                         streamsCollection['my_stream-123'] = {
@@ -66,13 +66,13 @@ describe('when processing events with a projection', () => {
                             data: { myEventDataField: 'my event' },
                             eventType: 'myEventType',
                             metadata: null,
-                            created: 1,
+                            EventId: 1,
                         };
                         const eventToIgnore = {
                             data: 'my event2',
                             eventType: 'myOtherEventType',
                             metadata: null,
-                            created: 2,
+                            EventId: 2,
                         };
 
                         streamsCollection['my_stream-123'] = {
@@ -105,13 +105,13 @@ describe('when processing events with a projection', () => {
                             data: { myEventDataField: 'my event' },
                             eventType: 'myEventType',
                             metadata: null,
-                            created: 1,
+                            EventId: 1,
                         };
                         const eventToIgnore = {
                             data: 'my event2',
                             eventType: 'myOtherEventType',
                             metadata: null,
-                            created: 2,
+                            EventId: 2,
                         };
 
                         streamsCollection['my_stream-123'] = {
@@ -143,13 +143,13 @@ describe('when processing events with a projection', () => {
                                 data: { myEventDataField: 'my event' },
                                 eventType: 'myEventType',
                                 metadata: null,
-                                created: 1,
+                                EventId: 1,
                             };
                             const eventToIgnore = {
                                 data: 'my event2',
                                 eventType: 'myOtherEventType',
                                 metadata: null,
-                                created: 2,
+                                EventId: 2,
                             };
 
                             streamsCollection['my_stream-123'] = {
@@ -183,13 +183,13 @@ describe('when processing events with a projection', () => {
                                 data: { myEventDataField: 'my event' },
                                 eventType: 'myEventType',
                                 metadata: inputMetadata,
-                                created: 1,
+                                EventId: 1,
                             };
                             const eventToIgnore = {
                                 data: 'my event2',
                                 eventType: 'myOtherEventType',
                                 metadata: null,
-                                created: 2,
+                                EventId: 2,
                             };
 
                             streamsCollection['my_stream-123'] = {
@@ -217,13 +217,13 @@ describe('when processing events with a projection', () => {
                             data: 'my event',
                             eventType: 'myEventType',
                             metadata: null,
-                            created: 1,
+                            EventId: 1,
                         };
                         const eventTwo = {
                             data: 'my event2',
                             eventType: 'myEventType',
                             metadata: null,
-                            created: 2,
+                            EventId: 2,
                         };
 
                         streamsCollection['my_stream-123'] = {
@@ -262,19 +262,19 @@ describe('when processing events with a projection', () => {
                             data: 'my event',
                             eventType: 'myEventType',
                             metadata: { expected: '1' },
-                            created: 1,
+                            EventId: 1,
                         };
                         const eventTwo = {
                             data: 'my event2',
                             eventType: 'myEventType',
                             metadata: { expected: '2' },
-                            created: 2,
+                            EventId: 2,
                         };
                         const eventThree = {
                             data: 'my event3',
                             eventType: 'myEventType',
                             metadata: { expected: '3' },
-                            created: 3,
+                            EventId: 3,
                         };
 
                         streamsCollection['my_stream-123'] = {

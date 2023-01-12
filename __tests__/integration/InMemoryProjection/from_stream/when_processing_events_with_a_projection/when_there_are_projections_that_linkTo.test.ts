@@ -23,13 +23,13 @@ describe('when processing events with a projection', () => {
                         data: 'my event',
                         eventType: 'myEventType',
                         metadata: null,
-                        created: 1,
+                        EventId: 1,
                     };
                     const eventToIgnore = {
                         data: 'my event2',
                         eventType: 'myOtherEventType',
                         metadata: null,
-                        created: 2,
+                        EventId: 2,
                     };
 
                     streamsCollection.my_stream = {
@@ -45,12 +45,12 @@ describe('when processing events with a projection', () => {
                 });
 
                 it('the source event should be passed into the linkTo function', async () => {
-                    let passedInEvent: Event = { data: '', eventType: '', metadata: {}, created: 1 };
+                    let passedInEvent: Event = { data: '', eventType: '', metadata: {}, EventId: 1 };
                     const eventToProcess = {
                         data: { myEventDataField: 'my event' },
                         eventType: 'myEventType',
                         metadata: null,
-                        created: 1,
+                        EventId: 1,
                     };
                     const linkToFunc: linkToFunction = (streamId: string, event: Event, metadata: Metadata) => {
                         passedInEvent = event;
@@ -61,7 +61,7 @@ describe('when processing events with a projection', () => {
                         data: 'my event2',
                         eventType: 'myOtherEventType',
                         metadata: null,
-                        created: 2,
+                        EventId: 2,
                     };
 
                     streamsCollection.my_stream = {
@@ -82,7 +82,7 @@ describe('when processing events with a projection', () => {
                         data: { myEventDataField: 'my event' },
                         eventType: 'myEventType',
                         metadata: null,
-                        created: 1,
+                        EventId: 1,
                     };
                     const linkToFunc: linkToFunction = (streamId: string, event: Event, metadata: Metadata) => {
                         passedInMetadata = metadata;
@@ -94,7 +94,7 @@ describe('when processing events with a projection', () => {
                         data: 'my event2',
                         eventType: 'myOtherEventType',
                         metadata: null,
-                        created: 2,
+                        EventId: 2,
                     };
 
                     streamsCollection.my_stream = {

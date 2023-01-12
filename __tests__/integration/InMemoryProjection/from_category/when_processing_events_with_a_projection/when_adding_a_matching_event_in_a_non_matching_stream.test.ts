@@ -27,13 +27,13 @@ describe('when processing events with a projection', () => {
                         data: 'my event',
                         eventType: 'myEventType',
                         metadata: null,
-                        created: 1,
+                        EventId: 1,
                     };
                     const eventToIgnore = {
                         data: 'my event2',
                         eventType: 'myOtherEventType',
                         metadata: null,
-                        created: 2,
+                        EventId: 2,
                     };
 
                     streamsCollection.my_non_matching_stream = {

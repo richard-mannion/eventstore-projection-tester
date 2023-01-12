@@ -11,7 +11,7 @@ describe('when processing events with a projection', () => {
                 const linkToFunc: linkToFunction = jest.fn().mockName('linkTo');
 
                 const streamsCollection: StreamCollection = {};
-                const eventToProcess = { data: 'my event', eventType: 'myEventType', metadata: null, created: 1 };
+                const eventToProcess = { data: 'my event', eventType: 'myEventType', metadata: null, EventId: 1 };
 
                 streamsCollection['my_stream-123'] = {
                     streamId: 'my_stream-123',

@@ -25,13 +25,13 @@ describe('when processing events with a projection', () => {
                     data: 'my event',
                     eventType: 'myEventType',
                     metadata: null,
-                    created: 1,
+                    EventId: 1,
                 };
                 const eventToProcess2 = {
                     data: 'my event2',
                     eventType: 'myEventType',
                     metadata: null,
-                    created: 2,
+                    EventId: 2,
                 };
 
                 streamsCollection.my_stream = {
