@@ -10,7 +10,7 @@ export const makeExecutableProjection = (enginePath: string, projectionName: str
 };
 
 export const wrapExecutableProjection = (sourceFunction: string): string => {
-    return `export const executableProjection = (emit, linkTo, fromStream, fromCategory) => {
+    return `exports.executableProjection = (emit, linkTo, fromStream, fromCategory) => {
   ${sourceFunction}
 };`;
 };

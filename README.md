@@ -19,7 +19,7 @@ An in memory version of eventstore. This implements the features of eventstore, 
 ### Adding a projection
 
 ```javascript
-const engineResult = await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
+const engineResult = await runEventstoreEngine(async (engine: EventstoreEngine) => {
     await engine.addProjection('my_projection', 'fromStream("listings").when({});');
 });
 ```
@@ -36,7 +36,7 @@ const expectedEvent = {
     eventType: newEventType,
     created: 2,
 };
-const engineResult = await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
+const engineResult = await runEventstoreEngine(async (engine: EventstoreEngine) => {
     engine.addEvent('my_stream', 'myEventType', { myField }, null);
 });
 ```
@@ -53,7 +53,7 @@ const expectedEvent = {
     eventType: newEventType,
     created: 2,
 };
-const engineResult = await runEventstoreEngine(async (engine: InMemoryEventstoreEngine) => {
+const engineResult = await runEventstoreEngine(async (engine: EventstoreEngine) => {
     await engine.addProjection(
         'myProjection',
         `fromStream('my_stream').when({
