@@ -1,22 +1,12 @@
-import {
-    CategoryAction,
-    StreamCollection,
-    StreamMessageHandler,
-    StreamPointerCollection,
-    ForeachStreamCategoryAction,
-} from './EventstoreEngine';
+import { StreamsAction, StreamMessageHandler, StreamCollection, StreamPointerCollection } from './EventstoreEngine';
 import { getNextEventStream } from './getNextEventStream';
-import { InMemoryForeachCategoryAction } from './InMemoryForeachStreamCategoryAction';
 
-export class InMemoryCategoryAction implements CategoryAction {
+export class InMemoryStreamsAction implements StreamsAction {
     private state: any;
     public streamPointers: StreamPointerCollection;
-    private foreachStreamCategoryAction: ForeachStreamCategoryAction;
     public constructor(private getStreams: () => StreamCollection) {
         this.streamPointers = {};
-        this.foreachStreamCategoryAction = new InMemoryForeachCategoryAction(getStreams);
     }
-
     public when(streamMessageHandler: StreamMessageHandler) {
         if (!this.state && streamMessageHandler.$init) {
             this.state = streamMessageHandler.$init();
@@ -36,9 +26,5 @@ export class InMemoryCategoryAction implements CategoryAction {
         if (streamMessageHandler[event.eventType]) {
             streamMessageHandler[event.eventType](this.state, event);
         }
-    }
-
-    public foreachStream(): ForeachStreamCategoryAction {
-        return this.foreachStreamCategoryAction;
     }
 }

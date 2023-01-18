@@ -14,6 +14,10 @@ export interface StreamAction {
     when(streamMessageHandler: StreamMessageHandler): void;
 }
 
+export interface StreamsAction {
+    when(streamMessageHandler: StreamMessageHandler): void;
+}
+
 export interface CategoryAction {
     when(categoryMessageHandler: StreamMessageHandler): void;
     foreachStream(): ForeachStreamCategoryAction;
@@ -36,6 +40,7 @@ export interface EventstoreEngine {
 
 export interface Projection {
     fromStream: fromStreamFunction;
+    fromStreams: fromStreamsFunction;
     fromCategory: fromCategoryFunction;
 }
 
@@ -51,6 +56,7 @@ export type StreamPointerCollection = { [key: string]: StreamPointer };
 export type emitFunction = (streamId: string, eventType: string, data: any, metadata: Metadata) => void;
 export type linkToFunction = (streamId: string, event: Event, metadata: Metadata) => void;
 export type fromStreamFunction = (streamName: string) => StreamAction;
+export type fromStreamsFunction = (streamName: Array<string>) => StreamAction;
 export type fromCategoryFunction = (categoryName: string) => StreamAction;
 export interface Event {
     data: any;
