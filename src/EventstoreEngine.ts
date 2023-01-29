@@ -69,6 +69,7 @@ export type projectionExecutor = (
     emit: emitFunction,
     linkTo: linkToFunction,
     fromStream: fromStreamFunction,
+    fromStreams: fromStreamsFunction,
     fromCategory: fromCategoryFunction,
 ) => void;
 export type projectionContainer = { projection: Projection; execute: projectionExecutor };
@@ -139,6 +140,7 @@ export class InMemoryEventstoreEngine implements EventstoreEngine {
                 this.emit,
                 this.linkTo,
                 projectionContainer.projection.fromStream,
+                projectionContainer.projection.fromStreams,
                 projectionContainer.projection.fromCategory,
             );
         });
@@ -158,6 +160,7 @@ export class InMemoryEventstoreEngine implements EventstoreEngine {
                 this.emit,
                 this.linkTo,
                 projectionContainer.projection.fromStream,
+                projectionContainer.projection.fromStreams,
                 projectionContainer.projection.fromCategory,
             );
         });

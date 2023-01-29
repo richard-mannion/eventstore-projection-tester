@@ -1,7 +1,7 @@
 import { EventstoreEngine, InMemoryEventstoreEngine } from '../../../../src';
 import { runEventstoreEngine } from '../../../../src/runEventstoreEngine';
 
-describe('when adding a projectioj', () => {
+describe('when adding a projection', () => {
     describe('when there is one matching projection with emit', () => {
         describe('when adding one event', () => {
             it('should add the event and emit a new one', async () => {

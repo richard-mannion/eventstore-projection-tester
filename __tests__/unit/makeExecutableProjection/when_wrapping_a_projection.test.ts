@@ -2,7 +2,7 @@ import { wrapExecutableProjection } from '../../../src/makeExecutableProjection'
 
 describe('when making an executable projection', () => {
     const input = `fromStream("listings").when({})`;
-    const expectedOutput = `exports.executableProjection = (emit, linkTo, fromStream, fromCategory) => {
+    const expectedOutput = `exports.executableProjection = (emit, linkTo, fromStream, fromStreams, fromCategory) => {
   fromStream("listings").when({})
 };`;
 
